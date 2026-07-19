@@ -1,7 +1,10 @@
 package com.anmol.esicalert
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -10,6 +13,7 @@ import android.widget.Spinner
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -22,9 +26,8 @@ class MainActivity : Activity() {
 
     private val prefsName = "esic_prefs"
     private val intervalOptions = listOf(1, 2, 4, 6, 12, 24)
+    private val notificationPermissionRequestCode = 101
 
-    private lateinit var editPhone: EditText
-    private lateinit var editApiKey: EditText
     private lateinit var editKeywords: EditText
     private lateinit var spinnerInterval: Spinner
     private lateinit var switchAuto: Switch
@@ -34,8 +37,6 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        editPhone = findViewById(R.id.editPhone)
-        editApiKey = findViewById(R.id.editApiKey)
         editKeywords = findViewById(R.id.editKeywords)
         spinnerInterval = findViewById(R.id.spinnerInterval)
         switchAuto = findViewById(R.id.switchAuto)
@@ -49,18 +50,27 @@ class MainActivity : Activity() {
         spinnerInterval.adapter = adapter
 
         loadSettings()
+        requestNotificationPermissionIfNeeded()
 
         findViewById<Button>(R.id.btnSave).setOnClickListener { saveSettings() }
         findViewById<Button>(R.id.btnCheckNow).setOnClickListener { runCheckNow() }
-        findViewById<Button>(R.id.btnTestWhatsapp).setOnClickListener { runTestMessage() }
+        findViewById<Button>(R.id.btnTestNotification).setOnClickListener { runTestNotification() }
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val granted = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            if (!granted) {
+                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), notificationPermissionRequestCode)
+            }
+        }
     }
 
     private fun prefs() = getSharedPreferences(prefsName, Context.MODE_PRIVATE)
 
     private fun loadSettings() {
         val p = prefs()
-        editPhone.setText(p.getString("phone", ""))
-        editApiKey.setText(p.getString("apikey", ""))
         editKeywords.setText(
             p.getString(
                 "keywords",
@@ -77,8 +87,6 @@ class MainActivity : Activity() {
     private fun saveSettings() {
         val hours = intervalOptions[spinnerInterval.selectedItemPosition]
         prefs().edit()
-            .putString("phone", editPhone.text.toString().trim())
-            .putString("apikey", editApiKey.text.toString().trim())
             .putString("keywords", editKeywords.text.toString().trim())
             .putInt("interval_hours", hours)
             .putBoolean("auto_enabled", switchAuto.isChecked)
@@ -110,7 +118,7 @@ class MainActivity : Activity() {
     private fun runCheckNow() {
         textLog.text = "Checking..."
         thread {
-            val log = EsicChecker.checkOnce(applicationContext, sendAlerts = true)
+            val log = EsicChecker.checkOnce(applicationContext, sendNotifications = true)
             runOnUiThread {
                 textLog.text = log
                 prefs().edit().putString("last_log", log).apply()
@@ -118,19 +126,18 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun runTestMessage() {
-        // Save first so the test uses whatever's currently typed in the fields.
+    private fun runTestNotification() {
+        // Save keywords/interval first in case they were just edited.
+        saveSettingsQuietly()
+        EsicChecker.sendTestNotification(applicationContext)
+        textLog.text = "Test notification sent - check your notification shade."
+    }
+
+    private fun saveSettingsQuietly() {
+        val hours = intervalOptions[spinnerInterval.selectedItemPosition]
         prefs().edit()
-            .putString("phone", editPhone.text.toString().trim())
-            .putString("apikey", editApiKey.text.toString().trim())
+            .putString("keywords", editKeywords.text.toString().trim())
+            .putInt("interval_hours", hours)
             .apply()
-        textLog.text = "Sending test message..."
-        thread {
-            val ok = EsicChecker.sendTestMessage(applicationContext)
-            runOnUiThread {
-                textLog.text = if (ok) "Test message sent - check WhatsApp." else
-                    "Could not send. Double-check your number and API key."
-            }
-        }
     }
 }

@@ -12,7 +12,7 @@ import androidx.work.workDataOf
  */
 class EsicWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
     override fun doWork(): Result {
-        val log = EsicChecker.checkOnce(applicationContext, sendAlerts = true)
+        val log = EsicChecker.checkOnce(applicationContext, sendNotifications = true)
         return Result.success(workDataOf("log" to log))
     }
 }

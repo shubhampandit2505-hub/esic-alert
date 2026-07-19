@@ -1,11 +1,16 @@
 package com.anmol.esicalert
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 
 /**
@@ -18,6 +23,7 @@ object EsicChecker {
     private const val BASE_URL = "https://esic.gov.in/recruitments"
     private const val PREFS_NAME = "esic_prefs"
     private const val PAGES_TO_CHECK = 2
+    private const val CHANNEL_ID = "esic_alerts"
 
     data class Posting(
         val uid: String,
@@ -35,7 +41,7 @@ object EsicChecker {
     }
 
     /** Runs one full check. Returns a human-readable summary for display in the UI/log. */
-    fun checkOnce(context: Context, sendAlerts: Boolean): String {
+    fun checkOnce(context: Context, sendNotifications: Boolean): String {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val log = StringBuilder()
 
@@ -97,43 +103,62 @@ object EsicChecker {
         }
 
         log.append("${matches.size} match your keywords:\n")
-        val message = StringBuilder("ESIC alert - ${matches.size} new posting(s):\n\n")
+        val body = StringBuilder()
         for (p in matches.take(6)) {
             val line = "- ${p.office}: ${p.subject.take(140)}" +
-                (if (p.lastDate.isNotBlank()) " (last date ${p.lastDate})" else "") +
-                (if (p.link.isNotBlank()) " ${p.link}" else "")
+                (if (p.lastDate.isNotBlank()) " (last date ${p.lastDate})" else "")
             log.append(line).append("\n")
-            message.append(line).append("\n")
+            body.append(line).append("\n")
         }
         if (matches.size > 6) {
-            message.append("...and ${matches.size - 6} more. Check esic.gov.in/recruitments\n")
+            body.append("...and ${matches.size - 6} more. Check esic.gov.in/recruitments\n")
         }
 
-        if (sendAlerts) {
-            val sent = sendWhatsApp(context, message.toString())
-            log.append(if (sent) "WhatsApp alert sent.\n" else "WhatsApp alert NOT sent - check phone/API key in settings.\n")
+        if (sendNotifications) {
+            sendNotification(
+                context,
+                "ESIC Alert - ${matches.size} new posting(s)",
+                body.toString().trim()
+            )
+            log.append("Notification sent.\n")
         }
 
         return log.toString()
     }
 
-    fun sendTestMessage(context: Context): Boolean {
-        return sendWhatsApp(context, "ESIC Alert app test message - if you see this on WhatsApp, it's wired up correctly.")
+    fun sendTestNotification(context: Context) {
+        sendNotification(
+            context,
+            "ESIC Alert test",
+            "If you can see this, notifications are working correctly."
+        )
     }
 
-    private fun sendWhatsApp(context: Context, text: String): Boolean {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val phone = prefs.getString("phone", "")?.trim() ?: ""
-        val apiKey = prefs.getString("apikey", "")?.trim() ?: ""
-        if (phone.isEmpty() || apiKey.isEmpty()) return false
+    private fun sendNotification(context: Context, title: String, text: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "ESIC Alerts",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.createNotificationChannel(channel)
+        }
 
-        val encoded = URLEncoder.encode(text, "UTF-8")
-        val url = "https://api.callmebot.com/whatsapp.php?phone=$phone&text=$encoded&apikey=$apiKey"
-        return try {
-            val request = Request.Builder().url(url).build()
-            client.newCall(request).execute().use { resp -> resp.isSuccessful }
-        } catch (e: Exception) {
-            false
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        val canNotify = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) ==
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+
+        if (canNotify) {
+            NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt(), builder.build())
         }
     }
 
