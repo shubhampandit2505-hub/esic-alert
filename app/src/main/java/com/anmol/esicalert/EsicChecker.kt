@@ -85,6 +85,10 @@ object EsicChecker {
             return log.toString()
         }
 
+        // Full snapshot of whatever esic.gov.in is showing right now (with links), so you can
+        // always eyeball the current listings yourself, not just what's new.
+        val snapshot = buildSnapshot(allPostings)
+
         val seen = prefs.getStringSet("seen_ids", null)
         val currentIds = allPostings.map { it.uid }.toSet()
 
@@ -92,6 +96,7 @@ object EsicChecker {
             prefs.edit().putStringSet("seen_ids", currentIds).apply()
             log.append("Baseline captured: ${currentIds.size} existing postings recorded.\n")
             log.append("No alerts sent for these - future NEW postings will trigger alerts.\n")
+            log.append(snapshot)
             return log.toString()
         }
 
@@ -100,6 +105,7 @@ object EsicChecker {
 
         if (newPostings.isEmpty()) {
             log.append("No new postings since last check.\n")
+            log.append(snapshot)
             return log.toString()
         }
 
@@ -121,6 +127,7 @@ object EsicChecker {
 
         if (matches.isEmpty()) {
             log.append("None of the new postings matched your keywords.\n")
+            log.append(snapshot)
             return log.toString()
         }
 
@@ -128,7 +135,8 @@ object EsicChecker {
         val body = StringBuilder()
         for (p in matches.take(6)) {
             val line = "- ${p.office}: ${p.subject.take(140)}" +
-                (if (p.lastDate.isNotBlank()) " (last date ${p.lastDate})" else "")
+                (if (p.lastDate.isNotBlank()) " (last date ${p.lastDate})" else "") +
+                (if (p.link.isNotBlank()) "\n  ${p.link}" else "")
             log.append(line).append("\n")
             body.append(line).append("\n")
         }
@@ -145,7 +153,19 @@ object EsicChecker {
             log.append("Notification sent.\n")
         }
 
+        log.append(snapshot)
         return log.toString()
+    }
+
+    private fun buildSnapshot(postings: List<Posting>): String {
+        val sb = StringBuilder("\n---\nCurrent postings on esic.gov.in (${postings.size} checked this run):\n")
+        for (p in postings) {
+            sb.append("- ${p.office}: ${p.subject.take(120)}")
+            if (p.lastDate.isNotBlank()) sb.append(" [${p.lastDate}]")
+            sb.append("\n")
+            if (p.link.isNotBlank()) sb.append("  ${p.link}\n")
+        }
+        return sb.toString()
     }
 
     fun sendTestNotification(context: Context) {
