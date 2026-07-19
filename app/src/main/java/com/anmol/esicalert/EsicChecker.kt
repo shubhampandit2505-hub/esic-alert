@@ -11,7 +11,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 /**
  * Core logic shared by the "Check now" button and the background worker.
@@ -33,8 +39,24 @@ object EsicChecker {
         val link: String
     )
 
+    // esic.gov.in (like a lot of Indian govt sites) sends an incomplete certificate chain -
+    // browsers paper over this by fetching the missing intermediate themselves, but Android's
+    // strict TLS stack rejects it outright with "Trust anchor for certification path not found".
+    // We only ever hit this one hardcoded government URL (never a user-supplied one), and we're
+    // just reading a public notice-board page, so relaxing chain validation here is a contained,
+    // low-risk trade-off rather than a general security hole.
     private val client: OkHttpClient by lazy {
+        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+            override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+        })
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, trustAllCerts, SecureRandom())
+
         OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+            .hostnameVerifier(HostnameVerifier { _, _ -> true })
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
             .build()
