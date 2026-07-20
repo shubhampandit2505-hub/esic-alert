@@ -11,7 +11,8 @@
         android:allowBackup="true"
         android:label="ESIC Alert"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round">
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.EsicAlert">
 
         <activity
             android:name=".MainActivity"
