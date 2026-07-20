@@ -232,7 +232,7 @@
                         android:textSize="11sp"
                         android:textColor="#555555"
                         android:layout_marginTop="6dp"
-                        android:text="✓ General Intelligence & Reasoning (Analogies, Series, Coding)\n✓ General Awareness (Current affairs, History, Geography)\n✓ Quantitative Aptitude (Maths, Profit-Loss, Time-Speed)\n✓ English (Reading, Grammar, Vocabulary)" />
+                        android:text="✓ General Intelligence &amp; Reasoning (Analogies, Series, Coding)\n✓ General Awareness (Current affairs, History, Geography)\n✓ Quantitative Aptitude (Maths, Profit-Loss, Time-Speed)\n✓ English (Reading, Grammar, Vocabulary)" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -324,7 +324,7 @@
                         android:textSize="11sp"
                         android:textColor="#333333"
                         android:lineSpacingExtra="6dp"
-                        android:text="✓ Start with General Awareness - read newspapers daily\n\n✓ Practice math daily - focus on Speed & Accuracy\n\n✓ Improve English - read comprehensions & solve grammar\n\n✓ Reasoning - solve puzzles, mock tests, practice patterns\n\n✓ Take online mock tests regularly (2-3 per week)\n\n✓ Time management - Practice solving in 60 minutes (Prelims)\n\n✓ Maintain accuracy - Better to skip than attempt wrong\n\n✓ Join study groups - Discuss doubts & share resources\n\n✓ Current Affairs - Keep 1-2 months updated knowledge\n\n✓ Typing speed - Practice typing 35+ words/min for skill test" />
+                        android:text="✓ Start with General Awareness - read newspapers daily\n\n✓ Practice math daily - focus on Speed &amp; Accuracy\n\n✓ Improve English - read comprehensions &amp; solve grammar\n\n✓ Reasoning - solve puzzles, mock tests, practice patterns\n\n✓ Take online mock tests regularly (2-3 per week)\n\n✓ Time management - Practice solving in 60 minutes (Prelims)\n\n✓ Maintain accuracy - Better to skip than attempt wrong\n\n✓ Join study groups - Discuss doubts &amp; share resources\n\n✓ Current Affairs - Keep 1-2 months updated knowledge\n\n✓ Typing speed - Practice typing 35+ words/min for skill test" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
