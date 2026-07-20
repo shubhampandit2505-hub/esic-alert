@@ -13,6 +13,9 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLContext
@@ -82,7 +85,7 @@ object EsicChecker {
 
         if (allPostings.isEmpty()) {
             log.append("Nothing parsed - esic.gov.in may be down or its page layout changed.\n")
-            return log.toString()
+            return finish(context, log.toString())
         }
 
         // Full snapshot of whatever esic.gov.in is showing right now (with links), so you can
@@ -97,7 +100,7 @@ object EsicChecker {
             log.append("Baseline captured: ${currentIds.size} existing postings recorded.\n")
             log.append("No alerts sent for these - future NEW postings will trigger alerts.\n")
             log.append(snapshot)
-            return log.toString()
+            return finish(context, log.toString())
         }
 
         val newPostings = allPostings.filter { it.uid !in seen }
@@ -106,7 +109,7 @@ object EsicChecker {
         if (newPostings.isEmpty()) {
             log.append("No new postings since last check.\n")
             log.append(snapshot)
-            return log.toString()
+            return finish(context, log.toString())
         }
 
         log.append("${newPostings.size} new posting(s) found.\n")
@@ -128,17 +131,17 @@ object EsicChecker {
         if (matches.isEmpty()) {
             log.append("None of the new postings matched your keywords.\n")
             log.append(snapshot)
-            return log.toString()
+            return finish(context, log.toString())
         }
 
-        log.append("${matches.size} match your keywords:\n")
+        log.append("${matches.size} match your keywords:\n\n")
         val body = StringBuilder()
-        for (p in matches.take(6)) {
-            val line = "- ${p.office}: ${p.subject.take(140)}" +
-                (if (p.lastDate.isNotBlank()) " (last date ${p.lastDate})" else "") +
-                (if (p.link.isNotBlank()) "\n  ${p.link}" else "")
-            log.append(line).append("\n")
-            body.append(line).append("\n")
+        matches.take(6).forEachIndexed { i, p ->
+            val line = "${i + 1}. ${p.office}\n${p.subject.take(160)}" +
+                (if (p.lastDate.isNotBlank()) "\nLast date: ${p.lastDate}" else "") +
+                (if (p.link.isNotBlank()) "\n${p.link}" else "")
+            log.append(line).append("\n\n")
+            body.append(line).append("\n\n")
         }
         if (matches.size > 6) {
             body.append("...and ${matches.size - 6} more. Check esic.gov.in/recruitments\n")
@@ -154,16 +157,29 @@ object EsicChecker {
         }
 
         log.append(snapshot)
-        return log.toString()
+        return finish(context, log.toString())
+    }
+
+    /** Stamps the log with when this check ran and persists it, so re-opening the app (or
+     *  checking after a background run) always shows when it last actually checked. */
+    private fun finish(context: Context, message: String): String {
+        val timestamp = SimpleDateFormat("dd MMM yyyy, h:mm a", Locale.getDefault()).format(Date())
+        val stamped = "Last checked: $timestamp\n\n$message"
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString("last_log", stamped)
+            .apply()
+        return stamped
     }
 
     private fun buildSnapshot(postings: List<Posting>): String {
-        val sb = StringBuilder("\n---\nCurrent postings on esic.gov.in (${postings.size} checked this run):\n")
-        for (p in postings) {
-            sb.append("- ${p.office}: ${p.subject.take(120)}")
-            if (p.lastDate.isNotBlank()) sb.append(" [${p.lastDate}]")
+        val sb = StringBuilder("\n----------\nCurrent postings on esic.gov.in (${postings.size} checked this run):\n\n")
+        postings.forEachIndexed { i, p ->
+            sb.append("${i + 1}. ${p.office}\n")
+            sb.append("${p.subject.take(160)}\n")
+            if (p.lastDate.isNotBlank()) sb.append("Last date: ${p.lastDate}\n")
+            if (p.link.isNotBlank()) sb.append("${p.link}\n")
             sb.append("\n")
-            if (p.link.isNotBlank()) sb.append("  ${p.link}\n")
         }
         return sb.toString()
     }

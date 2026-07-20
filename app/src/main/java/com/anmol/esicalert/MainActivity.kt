@@ -121,7 +121,6 @@ class MainActivity : Activity() {
             val log = EsicChecker.checkOnce(applicationContext, sendNotifications = true)
             runOnUiThread {
                 textLog.text = log
-                prefs().edit().putString("last_log", log).apply()
             }
         }
     }
