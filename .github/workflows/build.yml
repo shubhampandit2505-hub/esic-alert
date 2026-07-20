@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,8 +31,21 @@ jobs:
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
 
-      - name: Upload APK
+      - name: Upload APK (per-run artifact)
         uses: actions/upload-artifact@v4
         with:
           name: esic-alert-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Remove previous "latest" release
+        run: gh release delete latest --yes --cleanup-tag || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish latest build as a GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          body: Automatically built from commit ${{ github.sha }}. Always the newest working APK.
+          files: app/build/outputs/apk/debug/app-debug.apk

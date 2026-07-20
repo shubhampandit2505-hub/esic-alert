@@ -4,14 +4,17 @@ Checks esic.gov.in on a schedule and pops a notification on your phone when some
 matches your keywords (physiotherapist, Gorakhpur, Lucknow, Kanpur, etc). No WhatsApp/third-party
 service involved — it's a plain Android notification, since the app already lives on the phone.
 
-## Getting the APK after any code change
+## Getting the APK
 
-1. Push to `main` (or click **Actions → Build APK → Run workflow** to trigger manually).
-2. Open the **Actions** tab → click the latest run → wait for the green check (~2-3 min).
-3. Scroll to the bottom of that run page → **Artifacts** → download `esic-alert-debug-apk` →
-   unzip → `app-debug.apk`.
-4. Send that file to your phone (Drive/email/USB), open it, allow "install from this source"
-   the first time, tap install.
+Always available at one stable link, no digging through Actions runs needed:
+
+**https://github.com/shubhampandit2505-hub/esic-alert/releases/latest**
+
+That page always has the newest working build attached as `app-debug.apk`. After any code
+change gets pushed, wait ~2-3 minutes for the build to finish, then that same link will have
+the updated file (it replaces the old one each time, so there's never more than one to pick
+from). Download it, send it to your phone (Drive/email/USB), open it, allow "install from this
+source" the first time, tap install.
 
 ## Using the app
 
