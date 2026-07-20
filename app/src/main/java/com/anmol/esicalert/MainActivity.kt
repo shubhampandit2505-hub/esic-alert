@@ -14,13 +14,11 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkRequest
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
@@ -122,13 +120,8 @@ class MainActivity : Activity() {
             TimeUnit.HOURS
         )
             .setConstraints(constraints)
-            // Add exponential backoff for retries on failure
-            // Initial delay: 30 seconds, multiplier: 2x, max delay: 30 minutes
-            .setBackoffPolicy(
-                BackoffPolicy.EXPONENTIAL,
-                30,  // Initial delay in seconds
-                TimeUnit.SECONDS
-            )
+            // Note: Backoff policy is handled by Result.retry() in EsicWorker
+            // For periodic work, failed tasks retry before the next scheduled interval
             .build()
         
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
