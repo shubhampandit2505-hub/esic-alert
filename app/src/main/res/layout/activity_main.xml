@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ESIC Job Alerts"
+                android:text="Hospital Admin Jobs"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your Admin Job Assistant"
+                android:text="MBA Officer-Level Positions"
                 android:textSize="12sp"
                 android:textColor="#CCCCCC"
                 android:layout_marginTop="4dp" />
@@ -86,7 +86,7 @@
                     android:layout_marginBottom="16dp"
                     android:textSize="13sp"
                     android:textColor="#666666"
-                    android:text="Get notified when new admin jobs match your interests" />
+                    android:text="Get notified when new hospital admin &amp; officer positions match your MBA profile" />
 
                 <!-- Keywords Section -->
                 <TextView
@@ -237,7 +237,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/black"
-                        android:text="Phase 1: PRELIMS (60 min, 100 questions)" />
+                        android:text="Hospital Administrator Officer Exam Syllabus" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -245,7 +245,7 @@
                         android:textSize="11sp"
                         android:textColor="#555555"
                         android:layout_marginTop="6dp"
-                        android:text="✓ General Intelligence &amp; Reasoning (Analogies, Series, Coding)\n✓ General Awareness (Current affairs, History, Geography)\n✓ Quantitative Aptitude (Maths, Profit-Loss, Time-Speed)\n✓ English (Reading, Grammar, Vocabulary)" />
+                        android:text="Phase 1: General Intelligence &amp; Aptitude\n✓ Reasoning, Logical Analysis\n✓ Quantitative Ability &amp; Data Interpretation\n✓ English Language &amp; Communication" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -254,7 +254,7 @@
                         android:textStyle="bold"
                         android:textColor="@android:color/black"
                         android:layout_marginTop="12dp"
-                        android:text="Phase 2: MAINS (120 min, 200 questions)" />
+                        android:text="Phase 2: Hospital Management Core" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -262,7 +262,7 @@
                         android:textSize="11sp"
                         android:textColor="#555555"
                         android:layout_marginTop="6dp"
-                        android:text="Same 4 subjects as Prelims but DEEPER LEVEL" />
+                        android:text="✓ Healthcare Finance &amp; Budgeting\n✓ Hospital Administration &amp; Planning\n✓ Quality Management &amp; Patient Care\n✓ Human Resource Management (HRM)" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -271,7 +271,7 @@
                         android:textStyle="bold"
                         android:textColor="@android:color/black"
                         android:layout_marginTop="12dp"
-                        android:text="Phase 3: SKILL TEST (Computer Skills)" />
+                        android:text="Phase 3: Healthcare Knowledge" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -279,7 +279,7 @@
                         android:textSize="11sp"
                         android:textColor="#555555"
                         android:layout_marginTop="6dp"
-                        android:text="Typing Speed: 35 words/min (English)\nBasic computer operations" />
+                        android:text="✓ Health Insurance Schemes (ESIC Act)\n✓ Patient Records &amp; Medical Ethics\n✓ Hospital Laws &amp; Regulations\n✓ Public Health Policies" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -337,7 +337,7 @@
                         android:textSize="11sp"
                         android:textColor="#333333"
                         android:lineSpacingExtra="6dp"
-                        android:text="✓ Start with General Awareness - read newspapers daily\n\n✓ Practice math daily - focus on Speed &amp; Accuracy\n\n✓ Improve English - read comprehensions &amp; solve grammar\n\n✓ Reasoning - solve puzzles, mock tests, practice patterns\n\n✓ Take online mock tests regularly (2-3 per week)\n\n✓ Time management - Practice solving in 60 minutes (Prelims)\n\n✓ Maintain accuracy - Better to skip than attempt wrong\n\n✓ Join study groups - Discuss doubts &amp; share resources\n\n✓ Current Affairs - Keep 1-2 months updated knowledge\n\n✓ Typing speed - Practice typing 35+ words/min for skill test" />
+                        android:text="✓ Master Finance - Learn healthcare budgeting, financial management, accounting basics\n\n✓ Study ESIC Act - Know ESIC schemes, benefits, policies thoroughly\n\n✓ Healthcare Management - Read about hospital administration, quality management concepts\n\n✓ Patient Care Standards - Understand medical ethics, patient rights, HIPAA policies\n\n✓ HRM Knowledge - Study HR principles, recruitment, staff management\n\n✓ Current Affairs - Follow healthcare news, new policies, health schemes\n\n✓ Practice Case Studies - Analyze hospital management problems &amp; solutions\n\n✓ Reasoning Skills - Improve logical analysis for management decisions\n\n✓ English Communication - Strong writing &amp; speaking for administrative roles\n\n✓ Take Online Tests - Attempt hospital management mock exams regularly" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -402,7 +402,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:text="UDC (Upper Division Clerk)" />
+                            android:text="Hospital Administrator (Officer Level)" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -410,7 +410,7 @@
                             android:textSize="11sp"
                             android:textColor="#555555"
                             android:layout_marginTop="4dp"
-                            android:text="Salary: Rs. 25,500-81,100\nAge: 18-27 years\nEducation: Any Graduation" />
+                            android:text="Salary: Rs. 56,100-1,77,500 (Level 10)\nAge: 21-30 years\nEducation: MBA/MHA or Graduate" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -426,7 +426,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:text="Stenographer" />
+                            android:text="Administrative Officer (ESIC)" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -434,7 +434,7 @@
                             android:textSize="11sp"
                             android:textColor="#555555"
                             android:layout_marginTop="4dp"
-                            android:text="Salary: Rs. 25,500-81,100\nShorthand: 80 wpm\nTyping: 50 min (English)" />
+                            android:text="Salary: Rs. 50,000-1,60,000 (Level 10-11)\nAge: 18-27 years\nEducation: Graduate with MBA preferred" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -449,7 +449,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:text="MTS (Multi-Tasking Staff)" />
+                            android:text="Office-in-Charge (OIC)" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -457,7 +457,7 @@
                             android:textSize="11sp"
                             android:textColor="#555555"
                             android:layout_marginTop="4dp"
-                            android:text="Salary: Rs. 18,000-56,900\nAge: 18-27 years\nEducation: 10th Pass" />
+                            android:text="Salary: Rs. 45,000-1,50,000 (Level 9-10)\nAge: 21-32 years\nEducation: Graduate with management experience" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

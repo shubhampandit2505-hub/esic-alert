@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             editKeywords.setText(
                 p.getString(
                     "keywords",
-                    "UDC, clerk, stenographer, MTS, administrative, assistant, office, clerical, lucknow, kanpur, gorakhpur"
+                    "hospital administrator, administrative officer, OIC, office-in-charge, manager, assistant hospital administrator, health manager, MBA, ESIC officer, AIIMS, lucknow, kanpur, gorakhpur, uttar pradesh"
                 )
             )
             val savedInterval = p.getInt("interval_hours", 2)
