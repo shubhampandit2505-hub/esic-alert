@@ -26,7 +26,7 @@
                 <ImageView
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:src="@drawable/shape_avatar_circle"
+                    android:src="@drawable/avatar_girl"
                     android:contentDescription="Avatar background"
                     android:scaleType="fitXY" />
 
@@ -35,7 +35,7 @@
                     android:layout_height="120dp"
                     android:src="@drawable/avatar_girl"
                     android:contentDescription="ESIC Alert Helper"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
                     android:layout_gravity="center" />
             </FrameLayout>
 

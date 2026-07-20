@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1536">
+    <!-- Outer circle border -->
+    <circle cx="512" cy="768" r="500" fill="none" stroke="#1976D2" stroke-width="20"/>
+    
+    <!-- Background circle -->
+    <circle cx="512" cy="768" r="480" fill="#FFFFFF"/>
+    
+    <!-- Head -->
+    <circle cx="512" cy="600" r="220" fill="#F4A89A"/>
+    
+    <!-- Hair -->
+    <ellipse cx="512" cy="450" rx="240" ry="280" fill="#3D2817"/>
+    
+    <!-- Hair highlights -->
+    <path d="M 350 500 Q 320 450 340 350" fill="none" stroke="#5C4033" stroke-width="15" opacity="0.5"/>
+    
+    <!-- Left ear muff -->
+    <ellipse cx="200" cy="620" rx="90" ry="120" fill="#E8E8E8"/>
+    <ellipse cx="200" cy="620" rx="70" ry="100" fill="#F5F5F5"/>
+    
+    <!-- Right ear muff -->
+    <ellipse cx="824" cy="620" rx="90" ry="120" fill="#E8E8E8"/>
+    <ellipse cx="824" cy="620" rx="70" ry="100" fill="#F5F5F5"/>
+    
+    <!-- Left eye white -->
+    <ellipse cx="380" cy="570" rx="45" ry="60" fill="#FFFFFF"/>
+    
+    <!-- Right eye white -->
+    <ellipse cx="644" cy="570" rx="45" ry="60" fill="#FFFFFF"/>
+    
+    <!-- Left pupil -->
+    <circle cx="380" cy="590" r="25" fill="#2C2C2C"/>
+    <circle cx="388" cy="580" r="8" fill="#FFFFFF"/>
+    
+    <!-- Right pupil -->
+    <circle cx="644" cy="590" r="25" fill="#2C2C2C"/>
+    <circle cx="652" cy="580" r="8" fill="#FFFFFF"/>
+    
+    <!-- Left eyebrow -->
+    <path d="M 340 520 Q 380 500 420 510" fill="none" stroke="#3D2817" stroke-width="12" stroke-linecap="round"/>
+    
+    <!-- Right eyebrow -->
+    <path d="M 604 510 Q 644 500 684 520" fill="none" stroke="#3D2817" stroke-width="12" stroke-linecap="round"/>
+    
+    <!-- Nose -->
+    <line x1="512" y1="600" x2="512" y2="670" stroke="#D4907E" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- Smile -->
+    <path d="M 420 730 Q 512 800 604 730" fill="none" stroke="#2C2C2C" stroke-width="12" stroke-linecap="round"/>
+    
+    <!-- Left blush -->
+    <circle cx="280" cy="700" r="40" fill="#FFB5A7" opacity="0.6"/>
+    
+    <!-- Right blush -->
+    <circle cx="744" cy="700" r="40" fill="#FFB5A7" opacity="0.6"/>
+    
+    <!-- Neck -->
+    <rect x="450" y="800" width="124" height="60" fill="#F4A89A"/>
+    
+    <!-- Shoulder left -->
+    <path d="M 450 860 Q 350 900 300 950" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="2"/>
+    
+    <!-- Shoulder right -->
+    <path d="M 574 860 Q 674 900 724 950" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="2"/>
+    
+    <!-- Body/Jacket -->
+    <path d="M 300 950 Q 250 1000 280 1200 L 744 1200 Q 774 1000 724 950" fill="#F5F5F5"/>
+    <path d="M 300 950 Q 250 1000 280 1200 L 744 1200 Q 774 1000 724 950" fill="none" stroke="#E0E0E0" stroke-width="3"/>
+</svg>
