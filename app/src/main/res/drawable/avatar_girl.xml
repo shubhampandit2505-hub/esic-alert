@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Outer circle border (blue) -->
+    <path
+        android:pathData="M 100,10 A 90,90 0 0,1 100,190 A 90,90 0 0,1 100,10"
+        android:strokeColor="#1976D2"
+        android:strokeWidth="3"
+        android:fillColor="none" />
+
+    <!-- White background circle -->
+    <path
+        android:pathData="M 100,15 A 85,85 0 0,1 100,185 A 85,85 0 0,1 100,15"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Head -->
+    <path
+        android:pathData="M 100,45 A 35,35 0 0,1 135,80 L 135,95 A 35,35 0 0,1 65,95 L 65,80 A 35,35 0 0,1 100,45"
+        android:fillColor="#F4A89A" />
+
+    <!-- Hair -->
+    <path
+        android:pathData="M 65,80 A 35,35 0 0,0 100,45 A 35,35 0 0,0 135,80 L 135,75 A 40,45 0 0,0 100,35 A 40,45 0 0,0 65,75 Z"
+        android:fillColor="#3D2817" />
+
+    <!-- Left ear muff -->
+    <ellipse
+        android:cx="50"
+        android:cy="85"
+        android:rx="15"
+        android:ry="20"
+        android:fillColor="#E8E8E8" />
+
+    <!-- Right ear muff -->
+    <ellipse
+        android:cx="150"
+        android:cy="85"
+        android:rx="15"
+        android:ry="20"
+        android:fillColor="#E8E8E8" />
+
+    <!-- Left eye white -->
+    <circle
+        android:cx="80"
+        android:cy="85"
+        android:r="8"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Right eye white -->
+    <circle
+        android:cx="120"
+        android:cy="85"
+        android:r="8"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Left pupil -->
+    <circle
+        android:cx="80"
+        android:cy="87"
+        android:r="5"
+        android:fillColor="#2C2C2C" />
+
+    <!-- Right pupil -->
+    <circle
+        android:cx="120"
+        android:cy="87"
+        android:r="5"
+        android:fillColor="#2C2C2C" />
+
+    <!-- Left eye shine -->
+    <circle
+        android:cx="82"
+        android:cy="85"
+        android:r="1.5"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Right eye shine -->
+    <circle
+        android:cx="122"
+        android:cy="85"
+        android:r="1.5"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Smile -->
+    <path
+        android:pathData="M 85,105 Q 100,115 115,105"
+        android:strokeColor="#2C2C2C"
+        android:strokeWidth="2"
+        android:fillColor="none"
+        android:strokeLineCap="round" />
+
+    <!-- Left blush -->
+    <circle
+        android:cx="60"
+        android:cy="100"
+        android:r="6"
+        android:fillColor="#FFB5A7"
+        android:alpha="0.6" />
+
+    <!-- Right blush -->
+    <circle
+        android:cx="140"
+        android:cy="100"
+        android:r="6"
+        android:fillColor="#FFB5A7"
+        android:alpha="0.6" />
+
+    <!-- Neck -->
+    <rect
+        android:x="90"
+        android:y="115"
+        android:width="20"
+        android:height="12"
+        android:fillColor="#F4A89A" />
+
+    <!-- Body/Jacket -->
+    <path
+        android:pathData="M 70,127 L 60,145 L 60,175 L 140,175 L 140,145 L 130,127 Z"
+        android:fillColor="#F5F5F5"
+        android:strokeColor="#E0E0E0"
+        android:strokeWidth="1" />
+</vector>
