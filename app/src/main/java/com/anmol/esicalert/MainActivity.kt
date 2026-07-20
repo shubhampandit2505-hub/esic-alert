@@ -134,9 +134,15 @@ class MainActivity : Activity() {
     private fun runCheckNow() {
         textLog.text = "Checking..."
         thread {
-            val log = EsicChecker.checkOnce(applicationContext, sendNotifications = true)
-            runOnUiThread {
-                textLog.text = log
+            try {
+                val log = EsicChecker.checkOnce(applicationContext, sendNotifications = true)
+                runOnUiThread {
+                    textLog.text = log
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    textLog.text = "Error during check: ${e.message}\n\n${e.stackTraceToString()}"
+                }
             }
         }
     }

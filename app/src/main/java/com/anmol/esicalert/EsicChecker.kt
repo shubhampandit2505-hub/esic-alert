@@ -67,97 +67,115 @@ object EsicChecker {
 
     /** Runs one full check. Returns a human-readable summary for display in the UI/log. */
     fun checkOnce(context: Context, sendNotifications: Boolean): String {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val log = StringBuilder()
+        return try {
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val log = StringBuilder()
 
-        val allPostings = mutableListOf<Posting>()
-        for (page in 1..PAGES_TO_CHECK) {
-            val url = if (page == 1) BASE_URL else "$BASE_URL/index/page:$page"
+            val allPostings = mutableListOf<Posting>()
+            for (page in 1..PAGES_TO_CHECK) {
+                try {
+                    val url = if (page == 1) BASE_URL else "$BASE_URL/index/page:$page"
+                    val html = fetch(url)
+                    val rows = parseRows(html)
+                    log.append("Page $page: found ${rows.size} rows.\n")
+                    allPostings.addAll(rows)
+                } catch (e: Exception) {
+                    log.append("Page $page: error - ${e.message}\n")
+                }
+            }
+
+            if (allPostings.isEmpty()) {
+                log.append("Nothing parsed - esic.gov.in may be down or its page layout changed.\n")
+                return finish(context, log.toString())
+            }
+
+            // Full snapshot of whatever esic.gov.in is showing right now (with links), so you can
+            // always eyeball the current listings yourself, not just what's new.
+            val snapshot = buildSnapshot(allPostings)
+
+            val seen = prefs.getStringSet("seen_ids", null)
+            val currentIds = allPostings.map { it.uid }.toSet()
+
+            if (seen == null) {
+                prefs.edit().putStringSet("seen_ids", currentIds).apply()
+                log.append("Baseline captured: ${currentIds.size} existing postings recorded.\n")
+                log.append("No alerts sent for these - future NEW postings will trigger alerts.\n")
+                log.append(snapshot)
+                return finish(context, log.toString())
+            }
+
+            val newPostings = allPostings.filter { it.uid !in seen }
+            prefs.edit().putStringSet("seen_ids", seen + currentIds).apply()
+
+            if (newPostings.isEmpty()) {
+                log.append("No new postings since last check.\n")
+                log.append(snapshot)
+                return finish(context, log.toString())
+            }
+
+            log.append("${newPostings.size} new posting(s) found.\n")
+
+            val keywords = (prefs.getString("keywords", "") ?: "")
+                .split(",")
+                .map { it.trim().lowercase() }
+                .filter { it.isNotEmpty() }
+
+            val matches = if (keywords.isEmpty()) {
+                newPostings // no keywords set -> alert on everything new
+            } else {
+                newPostings.filter { p ->
+                    val haystack = "${p.office} ${p.subject}".lowercase()
+                    keywords.any { kw -> haystack.contains(kw) }
+                }
+            }
+
+            if (matches.isEmpty()) {
+                log.append("None of the new postings matched your keywords.\n")
+                log.append(snapshot)
+                return finish(context, log.toString())
+            }
+
+            log.append("${matches.size} match your keywords:\n\n")
+            val body = StringBuilder()
+            matches.take(6).forEachIndexed { i, p ->
+                val line = "${i + 1}. ${p.office}\n${p.subject.take(160)}" +
+                    (if (p.lastDate.isNotBlank()) "\nLast date: ${p.lastDate}" else "") +
+                    (if (p.link.isNotBlank()) "\n${p.link}" else "")
+                log.append(line).append("\n\n")
+                body.append(line).append("\n\n")
+            }
+            if (matches.size > 6) {
+                body.append("...and ${matches.size - 6} more. Check esic.gov.in/recruitments\n")
+            }
+
+            if (sendNotifications) {
+                try {
+                    sendNotification(
+                        context,
+                        "ESIC Alert - ${matches.size} new posting(s)",
+                        body.toString().trim()
+                    )
+                    log.append("Notification sent.\n")
+                } catch (e: Exception) {
+                    log.append("Failed to send notification: ${e.message}\n")
+                }
+            }
+
+            log.append(snapshot)
+            finish(context, log.toString())
+        } catch (e: Exception) {
+            // Catch any unexpected errors to prevent crashes
+            val errorLog = "Unexpected error during check: ${e.message}\n${e.stackTraceToString()}"
             try {
-                val html = fetch(url)
-                val rows = parseRows(html)
-                log.append("Page $page: found ${rows.size} rows.\n")
-                allPostings.addAll(rows)
-            } catch (e: Exception) {
-                log.append("Page $page: error - ${e.message}\n")
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("last_log", "Last checked: ${SimpleDateFormat("dd MMM yyyy, h:mm a", Locale.getDefault()).format(Date())}\n\n$errorLog")
+                    .apply()
+            } catch (e2: Exception) {
+                // Even error logging failed, just return
             }
+            return errorLog
         }
-
-        if (allPostings.isEmpty()) {
-            log.append("Nothing parsed - esic.gov.in may be down or its page layout changed.\n")
-            return finish(context, log.toString())
-        }
-
-        // Full snapshot of whatever esic.gov.in is showing right now (with links), so you can
-        // always eyeball the current listings yourself, not just what's new.
-        val snapshot = buildSnapshot(allPostings)
-
-        val seen = prefs.getStringSet("seen_ids", null)
-        val currentIds = allPostings.map { it.uid }.toSet()
-
-        if (seen == null) {
-            prefs.edit().putStringSet("seen_ids", currentIds).apply()
-            log.append("Baseline captured: ${currentIds.size} existing postings recorded.\n")
-            log.append("No alerts sent for these - future NEW postings will trigger alerts.\n")
-            log.append(snapshot)
-            return finish(context, log.toString())
-        }
-
-        val newPostings = allPostings.filter { it.uid !in seen }
-        prefs.edit().putStringSet("seen_ids", seen + currentIds).apply()
-
-        if (newPostings.isEmpty()) {
-            log.append("No new postings since last check.\n")
-            log.append(snapshot)
-            return finish(context, log.toString())
-        }
-
-        log.append("${newPostings.size} new posting(s) found.\n")
-
-        val keywords = (prefs.getString("keywords", "") ?: "")
-            .split(",")
-            .map { it.trim().lowercase() }
-            .filter { it.isNotEmpty() }
-
-        val matches = if (keywords.isEmpty()) {
-            newPostings // no keywords set -> alert on everything new
-        } else {
-            newPostings.filter { p ->
-                val haystack = "${p.office} ${p.subject}".lowercase()
-                keywords.any { kw -> haystack.contains(kw) }
-            }
-        }
-
-        if (matches.isEmpty()) {
-            log.append("None of the new postings matched your keywords.\n")
-            log.append(snapshot)
-            return finish(context, log.toString())
-        }
-
-        log.append("${matches.size} match your keywords:\n\n")
-        val body = StringBuilder()
-        matches.take(6).forEachIndexed { i, p ->
-            val line = "${i + 1}. ${p.office}\n${p.subject.take(160)}" +
-                (if (p.lastDate.isNotBlank()) "\nLast date: ${p.lastDate}" else "") +
-                (if (p.link.isNotBlank()) "\n${p.link}" else "")
-            log.append(line).append("\n\n")
-            body.append(line).append("\n\n")
-        }
-        if (matches.size > 6) {
-            body.append("...and ${matches.size - 6} more. Check esic.gov.in/recruitments\n")
-        }
-
-        if (sendNotifications) {
-            sendNotification(
-                context,
-                "ESIC Alert - ${matches.size} new posting(s)",
-                body.toString().trim()
-            )
-            log.append("Notification sent.\n")
-        }
-
-        log.append(snapshot)
-        return finish(context, log.toString())
     }
 
     /** Stamps the log with when this check ran and persists it, so re-opening the app (or
@@ -221,16 +239,20 @@ object EsicChecker {
     }
 
     private fun fetch(url: String): String {
-        val request = Request.Builder()
-            .url(url)
-            .header(
-                "User-Agent",
-                "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36"
-            )
-            .build()
-        client.newCall(request).execute().use { resp ->
-            if (!resp.isSuccessful) throw Exception("HTTP ${resp.code}")
-            return resp.body?.string() ?: ""
+        return try {
+            val request = Request.Builder()
+                .url(url)
+                .header(
+                    "User-Agent",
+                    "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36"
+                )
+                .build()
+            client.newCall(request).execute().use { resp ->
+                if (!resp.isSuccessful) throw Exception("HTTP ${resp.code}")
+                resp.body?.string() ?: ""
+            }
+        } catch (e: Exception) {
+            throw Exception("Failed to fetch $url: ${e.message}")
         }
     }
 
