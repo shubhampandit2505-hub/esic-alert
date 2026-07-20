@@ -4,8 +4,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
+        android:name=".EsicApplication"
         android:allowBackup="true"
         android:label="ESIC Alert"
         android:icon="@mipmap/ic_launcher"

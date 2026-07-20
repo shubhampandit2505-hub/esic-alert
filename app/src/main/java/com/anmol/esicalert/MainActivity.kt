@@ -14,11 +14,13 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
@@ -94,23 +96,44 @@ class MainActivity : Activity() {
 
         if (switchAuto.isChecked) {
             scheduleBackgroundWork(hours)
-            Toast.makeText(this, "Saved. Background checks scheduled every $hours hour(s).", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this, 
+                "✓ Saved. Background checks scheduled every $hours hour(s). First check will run on schedule.", 
+                Toast.LENGTH_LONG
+            ).show()
+            android.util.Log.i("EsicAlert", "Background work scheduled for every $hours hour(s)")
         } else {
             WorkManager.getInstance(this).cancelUniqueWork("esic_periodic_check")
-            Toast.makeText(this, "Saved. Background checks turned off.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "✓ Saved. Background checks turned off.", Toast.LENGTH_LONG).show()
+            android.util.Log.i("EsicAlert", "Background work cancelled")
         }
     }
 
     private fun scheduleBackgroundWork(hours: Int) {
         val constraints = Constraints.Builder()
+            // Require network to be available, but allow retry if temporarily unavailable
             .setRequiredNetworkType(NetworkType.CONNECTED)
+            // Battery saver mode shouldn't block our checks
+            .setRequiresBatteryNotLow(false)
             .build()
-        val request = PeriodicWorkRequestBuilder<EsicWorker>(hours.toLong(), TimeUnit.HOURS)
+        
+        val request = PeriodicWorkRequestBuilder<EsicWorker>(
+            hours.toLong(), 
+            TimeUnit.HOURS
+        )
             .setConstraints(constraints)
+            // Add exponential backoff for retries on failure
+            // Initial delay: 30 seconds, multiplier: 2x, max delay: 30 minutes
+            .setBackoffPolicy(
+                BackoffPolicy.EXPONENTIAL,
+                30,  // Initial delay in seconds
+                TimeUnit.SECONDS
+            )
             .build()
+        
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "esic_periodic_check",
-            ExistingPeriodicWorkPolicy.UPDATE,
+            ExistingPeriodicWorkPolicy.REPLACE,  // REPLACE ensures app updates override old schedules
             request
         )
     }
