@@ -7,120 +7,95 @@
 
     <!-- Outer circle border (blue) -->
     <path
-        android:pathData="M 100,10 A 90,90 0 0,1 100,190 A 90,90 0 0,1 100,10"
+        android:fillColor="none"
+        android:pathData="M100,10a90,90 0 1,1 0,180a90,90 0 1,1 0,-180"
         android:strokeColor="#1976D2"
-        android:strokeWidth="3"
-        android:fillColor="none" />
+        android:strokeWidth="3" />
 
     <!-- White background circle -->
     <path
-        android:pathData="M 100,15 A 85,85 0 0,1 100,185 A 85,85 0 0,1 100,15"
-        android:fillColor="#FFFFFF" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M100,15a85,85 0 1,1 0,170a85,85 0 1,1 0,-170" />
 
-    <!-- Head -->
+    <!-- Head background -->
     <path
-        android:pathData="M 100,45 A 35,35 0 0,1 135,80 L 135,95 A 35,35 0 0,1 65,95 L 65,80 A 35,35 0 0,1 100,45"
-        android:fillColor="#F4A89A" />
+        android:fillColor="#F4A89A"
+        android:pathData="M100,45c19.3,0 35,15.7 35,35v15c0,19.3 -15.7,35 -35,35s-35,-15.7 -35,-35v-15c0,-19.3 15.7,-35 35,-35z" />
 
     <!-- Hair -->
     <path
-        android:pathData="M 65,80 A 35,35 0 0,0 100,45 A 35,35 0 0,0 135,80 L 135,75 A 40,45 0 0,0 100,35 A 40,45 0 0,0 65,75 Z"
-        android:fillColor="#3D2817" />
+        android:fillColor="#3D2817"
+        android:pathData="M65,80c0,-19.3 15.7,-35 35,-35s35,15.7 35,35v-5c0,-24.8 -20.1,-45 -45,-45s-45,20.1 -45,45v5z" />
 
     <!-- Left ear muff -->
-    <ellipse
-        android:cx="50"
-        android:cy="85"
-        android:rx="15"
-        android:ry="20"
-        android:fillColor="#E8E8E8" />
+    <path
+        android:fillColor="#E8E8E8"
+        android:pathData="M35,65c-8.3,0 -15,11.9 -15,26.5s6.7,26.5 15,26.5c8.3,0 15,-11.9 15,-26.5s-6.7,-26.5 -15,-26.5z" />
 
     <!-- Right ear muff -->
-    <ellipse
-        android:cx="150"
-        android:cy="85"
-        android:rx="15"
-        android:ry="20"
-        android:fillColor="#E8E8E8" />
+    <path
+        android:fillColor="#E8E8E8"
+        android:pathData="M165,65c8.3,0 15,11.9 15,26.5s-6.7,26.5 -15,26.5c-8.3,0 -15,-11.9 -15,-26.5s6.7,-26.5 15,-26.5z" />
 
-    <!-- Left eye white -->
-    <circle
-        android:cx="80"
-        android:cy="85"
-        android:r="8"
-        android:fillColor="#FFFFFF" />
+    <!-- Left eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M72,77c-4.4,0 -8,3.6 -8,8s3.6,8 8,8s8,-3.6 8,-8s-3.6,-8 -8,-8z" />
 
-    <!-- Right eye white -->
-    <circle
-        android:cx="120"
-        android:cy="85"
-        android:r="8"
-        android:fillColor="#FFFFFF" />
+    <!-- Right eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M128,77c-4.4,0 -8,3.6 -8,8s3.6,8 8,8s8,-3.6 8,-8s-3.6,-8 -8,-8z" />
 
     <!-- Left pupil -->
-    <circle
-        android:cx="80"
-        android:cy="87"
-        android:r="5"
-        android:fillColor="#2C2C2C" />
+    <path
+        android:fillColor="#2C2C2C"
+        android:pathData="M72,87c-2.8,0 -5,-2.2 -5,-5s2.2,-5 5,-5s5,2.2 5,5s-2.2,5 -5,5z" />
 
     <!-- Right pupil -->
-    <circle
-        android:cx="120"
-        android:cy="87"
-        android:r="5"
-        android:fillColor="#2C2C2C" />
+    <path
+        android:fillColor="#2C2C2C"
+        android:pathData="M128,87c-2.8,0 -5,-2.2 -5,-5s2.2,-5 5,-5s5,2.2 5,5s-2.2,5 -5,5z" />
 
     <!-- Left eye shine -->
-    <circle
-        android:cx="82"
-        android:cy="85"
-        android:r="1.5"
-        android:fillColor="#FFFFFF" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M75,85c-0.8,0 -1.5,-0.7 -1.5,-1.5s0.7,-1.5 1.5,-1.5s1.5,0.7 1.5,1.5s-0.7,1.5 -1.5,1.5z" />
 
     <!-- Right eye shine -->
-    <circle
-        android:cx="122"
-        android:cy="85"
-        android:r="1.5"
-        android:fillColor="#FFFFFF" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M131,85c-0.8,0 -1.5,-0.7 -1.5,-1.5s0.7,-1.5 1.5,-1.5s1.5,0.7 1.5,1.5s-0.7,1.5 -1.5,1.5z" />
 
     <!-- Smile -->
     <path
-        android:pathData="M 85,105 Q 100,115 115,105"
+        android:fillColor="none"
+        android:pathData="M85,105q15,10 30,0"
         android:strokeColor="#2C2C2C"
         android:strokeWidth="2"
-        android:fillColor="none"
         android:strokeLineCap="round" />
 
     <!-- Left blush -->
-    <circle
-        android:cx="60"
-        android:cy="100"
-        android:r="6"
+    <path
         android:fillColor="#FFB5A7"
+        android:pathData="M50,100c-3.3,0 -6,2.7 -6,6s2.7,6 6,6s6,-2.7 6,-6s-2.7,-6 -6,-6z"
         android:alpha="0.6" />
 
     <!-- Right blush -->
-    <circle
-        android:cx="140"
-        android:cy="100"
-        android:r="6"
+    <path
         android:fillColor="#FFB5A7"
+        android:pathData="M150,100c3.3,0 6,2.7 6,6s-2.7,6 -6,6s-6,-2.7 -6,-6s2.7,-6 6,-6z"
         android:alpha="0.6" />
 
     <!-- Neck -->
-    <rect
-        android:x="90"
-        android:y="115"
-        android:width="20"
-        android:height="12"
-        android:fillColor="#F4A89A" />
+    <path
+        android:fillColor="#F4A89A"
+        android:pathData="M90,115h20v12h-20z" />
 
     <!-- Body/Jacket -->
     <path
-        android:pathData="M 70,127 L 60,145 L 60,175 L 140,175 L 140,145 L 130,127 Z"
         android:fillColor="#F5F5F5"
+        android:pathData="M70,127l-10,18v30h80v-30l-10,-18z"
         android:strokeColor="#E0E0E0"
         android:strokeWidth="1" />
 </vector>
