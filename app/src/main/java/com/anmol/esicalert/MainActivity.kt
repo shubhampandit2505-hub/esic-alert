@@ -5,12 +5,15 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.work.Constraints
@@ -78,6 +81,11 @@ class MainActivity : AppCompatActivity() {
                 findViewById<Button>(R.id.btnSave).setOnClickListener { saveSettings() }
                 findViewById<Button>(R.id.btnCheckNow).setOnClickListener { runCheckNow() }
                 findViewById<Button>(R.id.btnTestNotification).setOnClickListener { runTestNotification() }
+                
+                // Setup expandable sections
+                setupExpandableSection(R.id.imgStudyGuide, R.id.layoutStudyGuideContent)
+                setupExpandableSection(R.id.imgPrepTips, R.id.layoutPrepTipsContent)
+                setupExpandableSection(R.id.imgJobInfo, R.id.layoutJobInfoContent)
             } catch (e: Exception) {
                 android.util.Log.e("MainActivity", "Failed to setup button listeners: ${e.message}", e)
                 showError("Button Setup Error", "Failed to setup buttons: ${e.message}")
@@ -85,6 +93,25 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             android.util.Log.e("MainActivity", "Critical error in onCreate: ${e.message}", e)
             showError("Critical Error", "App failed to initialize: ${e.message}")
+        }
+    }
+
+    private fun setupExpandableSection(toggleViewId: Int, contentViewId: Int) {
+        try {
+            val toggleView = findViewById<ImageView>(toggleViewId)
+            val contentView = findViewById<LinearLayout>(contentViewId)
+            
+            toggleView?.setOnClickListener {
+                if (contentView?.visibility == View.GONE) {
+                    contentView.visibility = View.VISIBLE
+                    toggleView.rotation = 180f
+                } else {
+                    contentView?.visibility = View.GONE
+                    toggleView.rotation = 0f
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Failed to setup expandable section: ${e.message}", e)
         }
     }
 
@@ -114,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             editKeywords.setText(
                 p.getString(
                     "keywords",
-                    "physiotherapist, paramedical, gorakhpur, uttar pradesh, lucknow, kanpur, hospital administration, medical record, udc, mts"
+                    "UDC, clerk, stenographer, MTS, administrative, assistant, office, clerical, lucknow, kanpur, gorakhpur"
                 )
             )
             val savedInterval = p.getInt("interval_hours", 2)
