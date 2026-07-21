@@ -202,6 +202,9 @@ class MainActivity : AppCompatActivity() {
                 ExistingPeriodicWorkPolicy.REPLACE,
                 request
             )
+            
+            android.util.Log.i("EsicAlert", "✓ Background work scheduled: Every $hours hour(s)")
+            android.util.Log.i("EsicAlert", "✓ Network required: Yes (will check when internet available)")
         } catch (e: Exception) {
             android.util.Log.e("MainActivity", "Error scheduling background work: ${e.message}", e)
             Toast.makeText(this, "Error scheduling background checks: ${e.message}", Toast.LENGTH_LONG).show()
